@@ -1,0 +1,36 @@
+# Configuration for Connected Mobility Intelligence (CMI)
+# CUMTA Urban Mobility Challenge
+
+DATA_DIR: "C:/Users/SATHYA/Desktop/Coding/SRM Hackathon/Theme 3"
+
+# Privacy Settings
+SALT_ENV_VAR: "CMI_HASH_SALT"
+DEFAULT_SALT: "cumta_chennai_multimodal_2026_salt"
+
+# Spatial & Temporal Transfer Thresholds
+THRESHOLDS:
+  MAX_TRANSFER_TIME_MINUTES: 30
+  MIN_TRANSFER_TIME_MINUTES: 0
+  MAX_WALK_DISTANCE_METERS: 500
+  WALK_DETOUR_FACTOR: 1.3 # Haversine * 1.3 walking estimate
+  CHENNAI_BBOX:
+    MIN_LAT: 12.75
+    MAX_LAT: 13.35
+    MIN_LON: 80.00
+    MAX_LON: 80.35
+
+# Clustering (DBSCAN) Parameters for Transfer Hubs
+DBSCAN:
+  EPS_METERS: 250 # ~250m radius for interchange clustering
+  MIN_SAMPLES: 3
+  METRIC: "haversine"
+
+# Anonymity & Aggregation
+ANONYMITY:
+  K_ANONYMITY_THRESHOLD: 5 # Suppress flows with < 5 transfers
+
+# Output Paths
+OUTPUTS:
+  PROCESSED_EVENTS_PARQUET: "data/processed/unified_events.parquet"
+  INTEGRATED_OD_MATRIX_JSON: "data/processed/integrated_od_matrix.json"
+

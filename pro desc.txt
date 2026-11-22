@@ -1,0 +1,56 @@
+Project Context: Connected Mobility Intelligence (CMI)
+1. Project Objective
+The goal of this project is to build a data-driven analytics engine and interactive geospatial dashboard to identify hidden multimodal transit transfers in Chennai. By analyzing isolated ticketing data from Chennai Metro (CMRL) and Metropolitan Transport Corporation (MTC) buses, the system will detect when a commuter switches between modes, providing CUMTA (Chennai Unified Metropolitan Transport Authority) with intelligence to optimize schedules and infrastructure.
+
+2. Local Data Environment (Critical Context for IDE)
+The IDE must access and process static datasets stored locally on a Windows machine. No external APIs are used for data fetching.
+
+Root Directory: C:\Users\SATHYA\Desktop\Coding\SRM Hackathon\Theme 3\
+
+Target Datasets:
+
+CMRL_Entry / CMRL_Exit: Contains Metro tap-in and tap-out logs (requires timestamp, station ID, and user ID extraction).
+
+ETM (Folder): Contains Electronic Ticketing Machine logs for MTC buses.
+
+Tambaram, Avadi, GCC Bus Stops List 1: Contains geospatial mapping (Latitude/Longitude) for the bus network.
+
+Public Transport / Road Network Old CMA: Folders containing supplementary spatial context for transit stops.
+
+3. Development Modules & AI Agent Tasks
+
+Module A: Data Engineering & Privacy (Python/Pandas)
+
+Task: Write a Python ingestion pipeline to read the Excel/CSV files from the local directory.
+
+Harmonization: Standardize the disparate files into a unified schema: [Hashed_User_ID, Timestamp, Lat, Lon, Station_Name, Transit_Mode].
+
+Privacy: Implement SHA-256 hashing on all Metro Smart Card numbers or Bus ticket IDs before writing to any processed dataframes.
+
+Module B: Spatiotemporal Analytics Engine (Python/GeoPandas)
+
+Task: Build a matching algorithm that groups the harmonized data by Hashed_User_ID and sorts it chronologically.
+
+Transfer Logic: Flag a sequence as a "Multimodal Transfer" if the time gap between Mode A tap-out and Mode B tap-in is 
+≤ 30 minutes, and the spatial distance between the two stops is 
+≤ 500 meters.
+
+Aggregation: Calculate total transfer volumes between specific nodes, compute average wait times, and use DBSCAN to cluster raw coordinates into unified "Transfer Hubs" (e.g., Guindy Hub). Export this as integrated_od_matrix.json.
+
+Module C: Frontend Geospatial Dashboard (React.js + Tailwind + Deck.gl/Mapbox)
+
+Task: Build a dark-mode web dashboard optimized for urban planners.
+
+Layout: Implement a 70/30 split. The left 70% is an interactive map; the right 30% is a floating analytics panel.
+
+Visual Layers: Render transit hubs as scatterplot nodes, transfer volumes as directed flow lines (arcs), and congested areas as a heatmap layer.
+
+Interactivity: Include a Time-of-Day slider to filter data by peak hours and dynamic KPI cards displaying total transfers and the top 5 congested hubs.
+
+4. Expected Execution Flow for Antigravity IDE
+
+Initialize Backend: Read the specified Windows directory and parse the CMRL and ETM files.
+
+Process Data: Run the spatiotemporal matching thresholds and output the aggregated JSON matrix locally.
+
+Initialize Frontend: Scaffold a React application, map the JSON data to Deck.gl layers, and apply Tailwind CSS styling.
